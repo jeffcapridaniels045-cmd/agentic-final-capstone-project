@@ -27,6 +27,10 @@ To make financial management smarter, simpler and more accessible through techno
 - Generate meaningful financial reports and insights.
 - Promote better financial discipline and accountability.
 
+## Project Scope
+
+The sections below describe the long-term vision for Averon. The first release is deliberately smaller: secure sign-in, transaction tracking, categories and a dashboard with charts. The exact scope, stretch goals and items that are out of scope are defined in [`docs/SPEC.md`](docs/SPEC.md).
+
 ## Key Features
 
 ### 1. Expense Management
@@ -91,44 +95,55 @@ To make financial management smarter, simpler and more accessible through techno
 
 ## Technology Stack
 
-The technology stack will be documented and updated as the project architecture is finalised.
-
-Potential technology categories include:
-
-- **Frontend:** Web application interface.
-- **Backend:** RESTful API and business logic.
-- **Database:** Relational database for financial records.
-- **Authentication:** Secure authentication and authorisation.
-- **Visualisation:** Financial dashboards and interactive charts.
-- **Deployment:** Cloud-based application hosting.
+| Layer                 | Choice                                                          |
+| --------------------- | --------------------------------------------------------------- |
+| Frontend              | React + Vite + TypeScript, Tailwind CSS, shadcn/ui              |
+| Data fetching / forms | TanStack Query, React Hook Form + Zod                           |
+| Charts                | Recharts                                                        |
+| Backend               | Python, FastAPI, Pydantic                                       |
+| Database              | PostgreSQL (SQLite acceptable for early local development)      |
+| ORM / migrations      | SQLAlchemy + Alembic                                            |
+| Authentication        | JWT access token, passwords hashed with argon2 or bcrypt        |
+| Testing               | pytest (backend), Vitest (frontend), optional Playwright (E2E)  |
+| Tooling               | Docker Compose, GitHub Actions (lint + tests)                   |
 
 ## Project Structure
-
-The project may be organised into the following logical components:
 
 ```text
 averon/
 ├── frontend/
 │   ├── src/
+│   │   ├── api/            # API client and typed endpoint functions
+│   │   ├── components/     # Reusable UI components
+│   │   ├── features/       # Auth, transactions, dashboard...
+│   │   ├── hooks/
+│   │   ├── lib/            # Formatters and utilities
+│   │   └── pages/
 │   ├── public/
 │   └── package.json
 │
 ├── backend/
 │   ├── app/
+│   │   ├── core/           # Settings, security
+│   │   ├── db/             # Database session
+│   │   ├── models/         # SQLAlchemy models
+│   │   ├── schemas/        # Pydantic schemas
+│   │   ├── routers/        # API routes
+│   │   ├── services/       # Business logic
+│   │   └── main.py
+│   ├── alembic/            # Database migrations
 │   ├── tests/
 │   └── requirements.txt
 │
-├── database/
-│   └── migrations/
-│
 ├── docs/
-│   └── architecture/
+│   └── SPEC.md
 │
+├── CLAUDE.md               # Conventions for AI coding assistants
 ├── .gitignore
 └── README.md
 ```
 
-*The directory structure is illustrative and should be adjusted to match the actual implementation.*
+*Some folders are added as the related features are built.*
 
 ## Security and Privacy
 
@@ -160,11 +175,44 @@ Security priorities include:
 
 ## Getting Started
 
-Installation instructions, environment configuration and development commands will be added as the application architecture and technology stack are established.
+### Prerequisites
+
+- Python 3.11 or newer
+- Node.js 20 or newer
+- Git
+
+### Backend
+
+```powershell
+cd backend
+python -m venv .venv
+.venv\Scripts\Activate.ps1          # macOS/Linux: source .venv/bin/activate
+pip install -r requirements.txt
+copy .env.example .env              # macOS/Linux: cp .env.example .env
+pytest
+uvicorn app.main:app --reload --port 8085
+```
+
+The API runs at <http://localhost:8085>. Interactive documentation is at <http://localhost:8085/docs> and a health check is at <http://localhost:8085/health>.
+
+### Frontend
+
+```powershell
+cd frontend
+npm install
+copy .env.example .env              # macOS/Linux: cp .env.example .env
+npm run dev
+```
+
+The app runs at <http://localhost:5173> and talks to the API URL set in `VITE_API_URL`.
 
 ## Contributing
 
-Contributions, improvements and suggestions are welcome. Development guidelines, coding standards and contribution procedures will be documented as the project evolves.
+Contributions, improvements and suggestions are welcome.
+
+- Work on a feature branch (`feat/...`, `fix/...`, `docs/...`), never directly on `main`.
+- Open a pull request for each change and make sure tests pass.
+- Follow the conventions in [`CLAUDE.md`](CLAUDE.md) and the scope in [`docs/SPEC.md`](docs/SPEC.md).
 
 ## License
 
