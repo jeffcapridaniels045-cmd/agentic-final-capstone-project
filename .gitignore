@@ -9,6 +9,7 @@ node_modules/
 dist/ 
 
 # Secrets and local data 
+.env.example
 .env 
 *.db 
 
