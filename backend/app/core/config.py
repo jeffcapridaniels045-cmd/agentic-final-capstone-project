@@ -12,7 +12,7 @@ class Settings:
 
     cors_origins: list[str] = field(
         default_factory=lambda: _split(
-            os.getenv("CORS_ORIGINS", "http://localhost:5173")
+            os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:5175,http://localhost:8085,http://127.0.0.1:5173,http://127.0.0.1:5175,http://127.0.0.1:8085")
         )
     )
 
